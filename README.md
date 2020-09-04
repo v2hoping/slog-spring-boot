@@ -38,7 +38,7 @@ Maven Setting
 ------------
 
 | 名称   | 类型 | 说明  |
-|---|:---:|---|---|
+|---|:---:|---|
 | slog.active  | true/false | 是否启用，默认不启动 |
 | slog.passwordActive | true/false  |  是否密码模式，默认否  |
 | slog.password  | 字符串 | 密码，为空则不使用密码 |
