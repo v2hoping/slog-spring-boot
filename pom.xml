@@ -3,11 +3,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <tag>master</tag>
+    <url>git@github.com:v2hoping/slog-spring-boot.git</url>
+    <connection>scm:git:git@github.com:v2hoping/slog-spring-boot.git</connection>
+    <developerConnection>scm:git:git@github.com:v2hoping/slog-spring-boot.git</developerConnection>
+  </scm>
+  <developers>
+    <developer>
+      <name>houping wang</name>
+      <email>whp1473@163.com</email>
+      <organization>v2hoping</organization>
+    </developer>
+  </developers>
   <!--Central Warehouse Release-->
   <groupId>com.v2hoping</groupId>
   <artifactId>slog-spring-boot</artifactId>
   <packaging>pom</packaging>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.0</version>
   <modules>
     <module>slog-spring-boot-starter</module>
     <module>slog-spring-boot-autoconfigure</module>
@@ -15,14 +40,25 @@
   </modules>
 
   <name>slog-spring-boot</name>
-  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
-    <slog.version>1.1.0-SNAPSHOT</slog.version>
+    <slog.version>1.1.0</slog.version>
+    <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
+    <java.version>1.8</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spring-boot.version>2.0.4.RELEASE</spring-boot.version>
+    <version.compiler-plugin>3.5.1</version.compiler-plugin>
+    <version.source-plugin>2.4</version.source-plugin>
+    <version.javadoc-plugin>2.9.1</version.javadoc-plugin>
+    <fastjson.version>1.2.54</fastjson.version>
+    <junit.version>4.12</junit.version>
+    <logback.version>1.2.3</logback.version>
+    <gpg.executable>gpg</gpg.executable>
+    <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
   </properties>
 
   <dependencyManagement>
@@ -85,92 +121,121 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- 配置部署的远程Nexus仓库 -->
-  <distributionManagement>
-    <repository>
-      <id>releases</id><!--这个ID需要与你的release仓库的Repository ID一致-->
-      <url>http://118.31.10.136:8081/nexus/content/repositories/releases</url>
-    </repository>
-
-    <snapshotRepository>
-      <id>snapshots</id><!--这个ID需要与你的snapshots仓库的Repository ID一致-->
-      <url>http://118.31.10.136:8081/nexus/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>*.xml</include>
-          <include>*.yml</include>
-          <include>**/*.xml</include>
-          <include>**/*.yml</include>
-          <include>**/*.ftl</include>
-          <include>*.ftl</include>
-          <include>**/*.properties</include>
-          <include>*.properties</include>
-          <include>**/*.xlsx</include>
-          <include>*.xlsx</include>
-          <include>**/*.xls</include>
-          <include>*.xls</include>
-          <include>**/*.xlsm</include>
-          <include>*.xlsm</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/java</directory>
-        <includes>
-          <include>*.xml</include>
-          <include>**/*.xml</include>
-        </includes>
-      </resource>
-    </resources>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${version.compiler-plugin}</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <compilerVersion>${java.version}</compilerVersion>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.5</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.7</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+            <aggregate>true</aggregate>
+            <charset>UTF-8</charset>
+            <docencoding>UTF-8</docencoding>
+          </configuration>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.0.0</version>
+          <!-- 绑定source插件到Maven的生命周期,并在生命周期后执行绑定的source的goal -->
+          <executions>
+            <execution>
+              <!-- 绑定source插件到Maven的生命周期 -->
+              <phase>compile</phase>
+              <!--在生命周期后执行绑定的source插件的goals -->
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
-      <!-- 要将源码部署到Nexus私服，请加入这个插件。 -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <configuration>
-          <attach>true</attach>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- resources插件 -->
-      <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-resources-plugin</artifactId>-->
-        <!--<version>2.6</version>-->
-        <!--<configuration>-->
-          <!--<encoding>UTF-8</encoding>-->
-          <!--<delimiters>-->
-            <!--<delimiter>@</delimiter>-->
-          <!--</delimiters>-->
-          <!--<useDefaultDelimiters>false</useDefaultDelimiters>-->
-        <!--</configuration>-->
-      <!--</plugin>-->
-
-      <!-- Compiler 插件, 设定JDK版本 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <encoding>UTF-8</encoding>
-        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
+
+
+  <repositories>
+    <repository>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <!-- 这里的id必须要和全局配置中的release id 一致 -->
+      <id>sonatype-nexus-staging</id>
+      <name>Nexus Release Repository</name>
+      <!-- 这里就是在创建issue成功后，对方回复的release发布地址-->
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+  </repositories>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </snapshotRepository>
+    <repository>
+      <id>sonatype-nexus-snapshots</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
 </project>
